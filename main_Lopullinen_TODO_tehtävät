@@ -1,0 +1,112 @@
+using System;
+using System.Collections.Generic;
+namespace TokaTesti
+{
+    class Program
+    {
+        public class Peli_tila {
+            public string pää_teksti;
+            public string vaihtoehto_1;
+            public string vaihtoehto_2;
+            public string vaihtoehto_3;
+            public bool peli_loppu;
+            public bool peli_voitettu;
+            public string[] siirtymätilat;
+
+            public string näytä_tila()
+            {
+                // TODO 1: Lopetetaanko peli, eli onko peli päättynyt
+                Console.WriteLine(pää_teksti);
+                // TODO 2: jos vaihtoehto on tyhjä sitä ei printata
+                Console.WriteLine("1."+vaihtoehto_1);
+                Console.WriteLine("2."+vaihtoehto_2);
+                Console.WriteLine("3."+vaihtoehto_3);
+                Console.Write("Mitä teet:");
+                // Luetaan käyttäjältä numero ja muutetaan se int:iksi
+                int valinta = int.Parse(Console.ReadKey().KeyChar.ToString());
+                // TODO 3: Jos valinta on väärä (esim 3, mutta tilaa kolme on tyhjä, niin pyydetään uusi valinta
+                Console.Write("\n");/*
+                Console.WriteLine("DEBUG-koodia: MUUTTUJAT");
+                Console.WriteLine("valinta = " + valinta);
+                  Console.WriteLine("siirtymätilat[0] = "+ siirtymätilat[0]);
+                    Console.WriteLine("siirtymätilat[1] = " +siirtymätilat[1]);
+                    Console.WriteLine("siirtymätilat[2] = " +siirtymätilat[2]);
+                Console.WriteLine("DEBUG-loppuu");
+                */
+                return siirtymätilat[valinta - 1];
+            }
+            public Peli_tila(string pt,string v1,string v2,string v3,bool pl,bool pv,string[] st)
+            {
+                pää_teksti = pt;
+                vaihtoehto_1 = v1;
+                vaihtoehto_2 = v2;
+                vaihtoehto_3 = v3;
+                peli_loppu = pl;
+                peli_voitettu = pv;
+                siirtymätilat = st;
+
+            }
+        } // Luokka Peli_tila loppuu
+        static void Main(string[] args)
+        {
+            Peli_tila alku = new Peli_tila(
+                "Olet vankisellissä odottamassa häpeäpaalua. Mitä teet?",
+                "Huuda vartioita","Tutki sellin läpikotaisin","Vaivu epätoivoon",
+                false,false,
+                new[] { "vartijat", "tutkiselli", "epätoivo" }
+                );
+            Peli_tila vartijat = new Peli_tila(
+                "Huudat vartioita.Yksi tulee.",
+                 "Väität vartiajalle löytäneesi sellistä kultaharkon ja pyydät tätä sisään.",
+                 "Alat kiroilemaan vartiajalle.",
+                 "",
+                 false,false,
+                 new[] { "kultaharkko", "kiroilu", "" }
+                 );
+            Peli_tila epätoivo = new Peli_tila(
+                "Aamu koittaa ja loppu tulee","","","",
+                true,false,
+                new[] { "", "", "" }
+            );
+            Peli_tila kiroilu = new Peli_tila(
+                "Vartija nauraa sinulle ja lähtee pois.",
+                "Vaivu epätoivoon", "", "",
+                true, false,
+                new[] { "epätoivo", "", "" }
+            );
+            // TODO 0: 
+            // Lisää peliin kaksi uutta tilaa
+            // Mieti tarkkaan mitä kaikkia muunnoksia tarvitset
+            Peli_tila tutkiselli = new Peli_tila(
+                "Diktaattori ei ole pistänyt rahaa vankilaan, " +
+                "kalteri lähtee helposti irti. Pääset pakoon.",
+                "Juokse suoraan sellista (EI TOIMI VIELÄ)",
+                "Odota pimeän tuloa ja pakene sitten (EI TOIMI VIELÄ)",
+                "",
+                true,true,
+                new[] {"","",""}
+            );
+            Peli_tila kultaharkko = new Peli_tila(
+                "Vartija tulee sisään ja kääntyy katsomaan osoittamaasi suuntaa. Kolkkaat hänet ja pakenet.",
+                "","","",
+                true,true,
+                new[] { "", "", "" }
+            );
+
+            Dictionary<string, Peli_tila> peli =
+                new Dictionary<string, Peli_tila>();
+            peli.Add("alku", alku);
+            peli.Add("vartijat", vartijat);
+            peli.Add("epätoivo", epätoivo);
+            peli.Add("kultaharkko", kultaharkko);
+            peli.Add("tutkiselli", tutkiselli);
+            peli.Add("kiroilu", kiroilu);
+            string seuraava_tila;
+            seuraava_tila = peli["alku"].näytä_tila();
+            //Console.WriteLine("Seuraavaksi pitäisi siirtyä tilaan:" + seuraava_tila);
+            while (true) {
+                seuraava_tila = peli[seuraava_tila].näytä_tila();
+            }
+        }
+    }
+}
